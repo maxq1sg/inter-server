@@ -45,12 +45,13 @@ class EventController extends BaseController {
 
   @Route(["body", "file"])
   async createEvent(payload: RequestPayload) {
-    const { ownerId, body, categoryId }: ICreateEvent = payload.body;
+    const { ownerId, body, categoryId,type }: ICreateEvent = payload.body;
     const newEvent = await this.eventService.createEvent({
       ownerId,
       body,
       categoryId,
       image: payload.file,
+      type
     });
     return newEvent;
   }

@@ -1,3 +1,5 @@
+import { FileType } from "../../../types/FileType";
+
 export interface IEvent {
   name: string;
   description?: string;
@@ -8,6 +10,7 @@ export interface ICreateEvent {
   body: IEvent;
   categoryId: number;
   image: Express.Multer.File;
+  type: FileType;
 }
 export interface IModifyEvent {
   body: IEvent;

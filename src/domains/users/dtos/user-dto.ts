@@ -1,3 +1,4 @@
+import { FileType } from "../../../types/FileType";
 import Role from "../../roles/roles.model";
 
 export interface CreateUser {
@@ -10,6 +11,8 @@ export interface CreateUser {
     address: string;
   };
   role?: Role;
+  image: Express.Multer.File;
+  type: FileType;
 }
 
 export interface ChangeUsersRole {

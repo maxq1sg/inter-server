@@ -4,12 +4,15 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import File from "../file/file.model";
 
 @Entity("users")
 export default class User extends BaseEntity {
@@ -50,4 +53,8 @@ export default class User extends BaseEntity {
 
   @OneToMany(() => Event, (event) => event.owner)
   owner_of_events: Event[];
+
+  @OneToOne(() => File, { onDelete: "CASCADE" })
+  @JoinColumn()
+  avatar: File;
 }

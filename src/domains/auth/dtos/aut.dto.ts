@@ -1,3 +1,4 @@
+import { FileType } from "../../../types/FileType";
 import Role from "../../roles/roles.model";
 import User from "../../users/user.model";
 
@@ -11,6 +12,8 @@ export interface RegisterUser {
     address: string;
   };
   role?: Role;
+  type:FileType;
+  image:Express.Multer.File
 }
 export interface LoginUser {
   email: string;

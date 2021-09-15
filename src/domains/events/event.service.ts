@@ -60,7 +60,8 @@ class EventService {
     return this.eventRepository.delete(id);
   }
   async createEvent(createEventBody: ICreateEvent) {
-    const { ownerId, body, categoryId, image } = createEventBody;
+    const { ownerId, body, categoryId, image, type } = createEventBody;
+    console.log(ownerId, body, categoryId, image, type);
     const owner = await this.userRepository.findOne(ownerId);
     if (!owner) {
       throw new CustomError(HttpStatusCode.NOT_FOUND, "No such user");
@@ -71,7 +72,7 @@ class EventService {
       throw new CustomError(HttpStatusCode.NOT_FOUND, "No such category");
     }
 
-    const preview = await this.fileService.addNewFileToStorage(image);
+    const preview = await this.fileService.addNewFileToStorage(image, type);
     const newEvent = this.eventRepository.create({
       ...body,
       category,

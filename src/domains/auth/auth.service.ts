@@ -13,13 +13,14 @@ class AuthService {
   constructor(private readonly userService: UserService) {}
 
   async registerUser(body: RegisterUser) {
-    const { first_name, last_name, add_data, password, email, role } = body;
+    const { first_name, last_name, add_data, password, email, role, type,image } =
+      body;
 
     const candidate = await User.findOne({ where: { email } });
     if (candidate) {
       throw new CustomError(
         HttpStatusCode.UNAUTHORIZED,
-        "Пользователь с таким email уже существует"
+        "User with such email already exists"
       );
     }
     const usersRole = await Role.findOne({ where: { name: role || "USER" } });
@@ -30,6 +31,8 @@ class AuthService {
       password,
       email,
       role: usersRole,
+      type,
+      image
     });
     return newUser;
   }

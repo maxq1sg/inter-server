@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import Event from "../events/event.model";
+import User from "../users/user.model";
 
 @Entity("files")
 export default class File extends BaseEntity {
@@ -17,4 +18,7 @@ export default class File extends BaseEntity {
 
   @OneToOne(() => Event, { onDelete: "CASCADE" })
   event: Event;
+
+  @OneToOne(() => User, { onDelete: "CASCADE" })
+  user: User;
 }

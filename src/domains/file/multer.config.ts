@@ -2,20 +2,21 @@ import multer, { FileFilterCallback } from "multer";
 import path from "path";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
+import CustomRequest from "../../types/CustomRequest";
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const directory = path.join(__dirname, "..", "..", "..", "static");
+  destination: function (req: CustomRequest, file: Express.Multer.File, cb) {
+    const { type } = req.body;
+    const directory = path.join(__dirname, "..", "..", "..", "static", type);
     if (!fs.existsSync(directory)) {
       fs.mkdirSync(directory, { recursive: true });
     }
     cb(null, directory);
   },
   filename: function (req, file, cb) {
-    cb(
-      null,
-      `${file.fieldname}-${uuidv4()}${path.extname(file.originalname)}`
-    );
+    const { type } = req.body;
+
+    cb(null, `${type}-${uuidv4()}${path.extname(file.originalname)}`);
   },
 });
 
@@ -35,6 +36,5 @@ const upload = multer({
   storage,
   fileFilter: (req, file, cb) => checkFiles(file, cb),
 });
-
 
 export default upload;

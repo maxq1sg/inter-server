@@ -25,7 +25,7 @@ const Route =
         }
 
         const payload: RequestPayload = metaTypes.reduce(
-          (prev: RequestPayload, meta:metaType) => {
+          (prev: RequestPayload, meta: metaType) => {
             prev[meta] = req[meta];
             return prev;
           },

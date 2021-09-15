@@ -24,7 +24,7 @@ export const registrationSchema: Schema = {
 
   password: {
     customSanitizer: {
-      options: (value) => value.trim().toString(),
+      options: (value) => value?.trim()?.toString(),
     },
     isLength: {
       errorMessage: `Пароль должен быть от ${MIN_PASSWORD_LENGTH} до${MAX_PASSWORD_LENGTH}`,

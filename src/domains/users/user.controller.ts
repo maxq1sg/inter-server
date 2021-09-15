@@ -55,7 +55,7 @@ class UserController extends BaseController{
     return data;
   }
 
-  @Route(["body"])
+  @Route(["body","file"])
   async createUser(payload: RequestPayload) {
     const {
       first_name,
@@ -64,6 +64,7 @@ class UserController extends BaseController{
       password,
       email,
       role,
+      type
     }: CreateUser = payload.body;
     const newUser = await this.userService.createUser({
       first_name,
@@ -72,6 +73,8 @@ class UserController extends BaseController{
       password,
       email,
       role,
+      type,
+      image:payload.file
     });
     return newUser;
   }

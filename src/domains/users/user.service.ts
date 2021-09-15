@@ -3,6 +3,7 @@ import { Service } from "typedi";
 import { getConnection } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import CustomError from "../../errors/errorTypes/CustomError";
+import FileService from "../file/file.service";
 import Role from "../roles/roles.model";
 import RoleRepository from "../roles/roles.repository";
 import { HttpStatusCode } from "./../../errors/HttpStatusCodes";
@@ -14,7 +15,8 @@ import UserRepository from "./user.repository";
 class UserService {
   constructor(
     @InjectRepository(User) private userRepository: UserRepository,
-    @InjectRepository(Role) private roleRepository: RoleRepository
+    @InjectRepository(Role) private roleRepository: RoleRepository,
+    private readonly fileService: FileService
   ) {}
 
   async getSingleUser(id: number) {
@@ -75,7 +77,12 @@ class UserService {
       +process.env.SALT_ROUNDS
     );
     body.password = hashedPassword;
-    const newUser = this.userRepository.create(body);
+    const avatar = await this.fileService.addNewFileToStorage(
+      body.image,
+      body.type
+    );
+
+    const newUser = this.userRepository.create({ ...body, avatar });
     await newUser.save();
     return newUser;
   }

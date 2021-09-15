@@ -13,7 +13,7 @@ class FileController extends BaseController {
   constructor(private readonly fileService: FileService) {
     super();
     this.router = Router();
-    this.initRoutes()
+    this.initRoutes();
   }
 
   initRoutes = () => {
@@ -22,7 +22,8 @@ class FileController extends BaseController {
 
   @Route(["body", "file"])
   async addNewFileToStorage(payload: RequestPayload) {
-    const data = await this.fileService.addNewFileToStorage(payload.file);
+    const { type } = payload.body;
+    const data = await this.fileService.addNewFileToStorage(payload.file, type);
     return data;
   }
 }

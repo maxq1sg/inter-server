@@ -10,12 +10,12 @@ import { checkSchema } from "express-validator";
 import { loginSchema, registrationSchema } from "./validation";
 
 @Service()
-class AuthController extends BaseController{
+class AuthController extends BaseController {
   public router: Router;
   constructor(private readonly authService: AuthService) {
-    super()
+    super();
     this.router = Router();
-    this.initRoutes()
+    this.initRoutes();
   }
 
   @Route(["body"])
@@ -33,7 +33,7 @@ class AuthController extends BaseController{
     return { user: userInDb, token };
   }
 
-  @Route(["body"])
+  @Route(["body","file"])
   async registerUser(payload: RequestPayload) {
     const {
       first_name,
@@ -42,6 +42,7 @@ class AuthController extends BaseController{
       password,
       email,
       role,
+      type,
     }: RegisterUser = payload.body;
     const newUser = await this.authService.registerUser({
       first_name,
@@ -50,6 +51,8 @@ class AuthController extends BaseController{
       password,
       email,
       role,
+      type,
+      image:payload.file
     });
     const token = this.authService.generateToken({
       email: newUser.email,
@@ -60,13 +63,13 @@ class AuthController extends BaseController{
     return { user: newUser, token };
   }
 
-  initRoutes=()=>{
+  initRoutes = () => {
     this.router.post(
       "/register",
-      checkSchema(registrationSchema),
+      // checkSchema(registrationSchema),
       this.registerUser
     );
     this.router.post("/login", checkSchema(loginSchema), this.loginUser);
-  }
+  };
 }
 export default AuthController;
