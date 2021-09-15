@@ -5,6 +5,7 @@ import { InjectRepository } from "typeorm-typedi-extensions";
 import Category from "./category.model";
 import CategoryRepository from "./category.repository";
 import EventRepository from "../events/event.repository";
+import Event from "../events/event.model";
 
 @Service()
 class CategoryService {
