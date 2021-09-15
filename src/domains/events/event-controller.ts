@@ -12,6 +12,7 @@ import { ICreateEvent, IModifyEvent, ISearchEvent } from "./dtos/create.event";
 import EventService from "./event.service";
 import { createEventSchema } from "./validation/createEventSchema";
 import { modifyEventSchema } from "./validation/modifyEventSchema";
+import { searchEventSchema } from "./validation/searchEventSchema";
 
 @Service()
 class EventController extends BaseController {
@@ -109,7 +110,11 @@ class EventController extends BaseController {
       upload.single("file"),
       this.createEvent
     );
-    this.router.post("/search", this.searchEvents);
+    this.router.post(
+      "/search",
+      checkSchema(searchEventSchema),
+      this.searchEvents
+    );
     this.router.put(
       "/",
       // AuthGuard,
