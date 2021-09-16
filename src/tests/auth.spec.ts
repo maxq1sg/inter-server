@@ -1,12 +1,12 @@
 import supertest from "supertest";
 import { Connection } from "typeorm";
+import { Application } from "express";
 import UserService from "../domains/users/user.service";
 import EventService from "../domains/events/event.service";
-import { Application } from "express";
 import setupDB, { EMode } from "../setupDb";
 import App from "../app";
 
-describe("test auth route", function () {
+describe("test auth route", () => {
   let request: supertest.SuperTest<supertest.Test>;
   let connection: Connection;
   let user_ids: number[];
@@ -29,13 +29,11 @@ describe("test auth route", function () {
   });
 
   test("user can't login with incorrect data", async () => {
-
     const responseWithIncorrectData = await request
       .post("/api/auth/login")
       .send({ email: "admin@gmail.com", password: "123456" });
     expect(responseWithIncorrectData.statusCode).toBe(401);
   });
-
 
   test("user can register with correct data", async () => {
     const response = await request.post("/api/auth/register").send({

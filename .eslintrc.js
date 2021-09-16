@@ -11,6 +11,16 @@ module.exports = {
   },
   plugins: ["@typescript-eslint", "unused-imports"],
   rules: {
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        js: "never",
+        jsx: "never",
+        ts: "never",
+        tsx: "never",
+      },
+    ],
     quotes: ["warn", "double"],
     "no-unused-vars": "off", // or "@typescript-eslint/no-unused-vars": "off",
     "unused-imports/no-unused-imports-ts": "warn",
@@ -23,5 +33,15 @@ module.exports = {
         argsIgnorePattern: "^_",
       },
     ],
+    "linebreak-style": 0,
+    "import/prefer-default-export": "off",
+    "no-useless-constructor": "off",
+  },
+  settings: {
+    "import/resolver": {
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    },
   },
 };

@@ -1,15 +1,15 @@
 import supertest from "supertest";
 import { Connection } from "typeorm";
+import { Application } from "express";
 import UserService from "../domains/users/user.service";
 import EventService from "../domains/events/event.service";
 import authorizeAsRole from "./utils/authorizeAsRole";
 import { ERole } from "../domains/roles/dto";
 import User from "../domains/users/user.model";
-import { Application } from "express";
 import setupDB, { EMode } from "../setupDb";
 import App from "../app";
 
-describe("test subscription route", function () {
+describe("test subscription route", () => {
   let request: supertest.SuperTest<supertest.Test>;
   let connection: Connection;
   let user_ids: number[];

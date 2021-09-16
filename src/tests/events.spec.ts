@@ -1,14 +1,14 @@
 import supertest from "supertest";
 import { Connection } from "typeorm";
+import { Application } from "express";
 import UserService from "../domains/users/user.service";
 import EventService from "../domains/events/event.service";
 import authorizeAsRole from "./utils/authorizeAsRole";
 import { ERole } from "../domains/roles/dto";
-import { Application } from "express";
 import setupDB, { EMode } from "../setupDb";
 import App from "../app";
 
-describe("test event route", function () {
+describe("test event route", () => {
   let request: supertest.SuperTest<supertest.Test>;
   let connection: Connection;
   let user_ids: number[];
@@ -39,7 +39,7 @@ describe("test event route", function () {
         owner_id: user_ids[2],
         body: { name: "mainEvent", description: "very interesting" },
       });
-      console.log(response.body)
+    console.log(response.body);
     expect(response.statusCode).toBe(200);
   });
 

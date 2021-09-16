@@ -8,7 +8,7 @@ export default function initEventRouter(router: Router) {
     // PermissionGuard(EPermission.CREATE_EVENT),
     // checkSchema(createEventSchema),
     upload.single("file"),
-    this.createEvent
+    this.createEvent,
   );
   router.post("/search", this.searchEvents);
   router.put(
@@ -16,7 +16,7 @@ export default function initEventRouter(router: Router) {
     // AuthGuard,
     // PermissionGuard(EPermission.MODIFY_EVENT_DETAILS),
     // checkSchema(modifyEventSchema),
-    this.modifyEvent
+    this.modifyEvent,
   );
   router.get("/:id", this.getSinglEvent);
   router.get("/:id/subs", this.getEventSubs);

@@ -1,10 +1,10 @@
-import { HttpStatusCode } from "./../../errors/HttpStatusCodes";
 import { Router } from "express";
+import { Service } from "typedi";
+import { HttpStatusCode } from "../../errors/HttpStatusCodes";
 import UserService from "./user.service";
 import CustomError from "../../errors/errorTypes/CustomError";
 import Route from "../../middleware/RouteDecorator";
 import { ChangeUsersRole, CreateUser } from "./dtos/user-dto";
-import { Service } from "typedi";
 import { RequestPayload } from "../../middleware/types/MetaType";
 import initUserRoute from "./user.router";
 import BaseController from "../../middleware/types/BaseController";
@@ -12,11 +12,12 @@ import AuthGuard from "../../middleware/AuthGuard";
 import PermissionGuard from "../../middleware/PermissionGuard";
 import { EPermission } from "../permisssions/types";
 
-@Service()
-class UserController extends BaseController{
+@Service({ id: "user.controller" })
+class UserController extends BaseController {
   public router: Router;
+
   constructor(private readonly userService: UserService) {
-    super()
+    super();
     this.router = Router();
     initUserRoute.call(this, this.router);
   }
@@ -34,7 +35,8 @@ class UserController extends BaseController{
     const data = await this.userService.deleteUser(+id);
     return { message: `Удалено пользователей: ${data.affected}` };
   }
-  //fix
+
+  // fix
   @Route(["params", "user"])
   async getEventsOfSingleUser(payload: RequestPayload) {
     const { id: idFromClient } = payload.params;
@@ -55,7 +57,7 @@ class UserController extends BaseController{
     return data;
   }
 
-  @Route(["body","file"])
+  @Route(["body", "file"])
   async createUser(payload: RequestPayload) {
     const {
       first_name,
@@ -64,7 +66,7 @@ class UserController extends BaseController{
       password,
       email,
       role,
-      type
+      type,
     }: CreateUser = payload.body;
     const newUser = await this.userService.createUser({
       first_name,
@@ -74,7 +76,7 @@ class UserController extends BaseController{
       email,
       role,
       type,
-      image:payload.file
+      image: payload.file,
     });
     return newUser;
   }
@@ -94,7 +96,8 @@ class UserController extends BaseController{
     });
     return modifiedUser;
   }
-  initRoutes=()=>{
+
+  initRoutes = () => {
     this.router.post("/", this.createUser);
     this.router.post("/seed", this.seedUsers);
     this.router.get("/:id/events", AuthGuard, this.getEventsOfSingleUser);
@@ -107,6 +110,6 @@ class UserController extends BaseController{
       this.getAllUsers
     );
     this.router.put("/role", this.changeUsersRole);
-  }
+  };
 }
 export default UserController;

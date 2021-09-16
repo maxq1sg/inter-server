@@ -1,18 +1,18 @@
-import { HttpStatusCode } from "./../errors/HttpStatusCodes";
-import { EPermission } from "./../domains/permisssions/types/index";
 import { NextFunction, Response } from "express";
-import RoleService from "../domains/roles/roles.service";
 import asyncHandler from "express-async-handler";
+import Container from "typedi";
+import { EPermission } from "../domains/permisssions/types/index";
+import RoleService from "../domains/roles/roles.service";
 import CustomRequest from "../types/CustomRequest";
 import CustomError from "../errors/errorTypes/CustomError";
-import Container from "typedi";
+import { HttpStatusCode } from "../errors/httpStatusCodes";
 
 export default function PermissionGuard(requiredPermission: EPermission) {
-  return asyncHandler(async function (
+  return asyncHandler(async (
     req: CustomRequest,
     res: Response,
-    next: NextFunction
-  ) {
+    next: NextFunction,
+  ) => {
     const { user } = req;
 
     if (!user) {
@@ -21,12 +21,12 @@ export default function PermissionGuard(requiredPermission: EPermission) {
 
     const roleService = Container.get(RoleService);
     const permissions = await roleService.getPermissionsListToRole(
-      user.role?.id
+      user.role?.id,
     );
 
     if (
       permissions.some(
-        (singlePermission) => singlePermission.name === requiredPermission
+        (singlePermission) => singlePermission.name === requiredPermission,
       )
     ) {
       next();

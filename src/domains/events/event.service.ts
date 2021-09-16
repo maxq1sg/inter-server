@@ -1,13 +1,13 @@
-import { HttpStatusCode } from "./../../errors/HttpStatusCodes";
-import User from "../../domains/users/user.model";
 import { getConnection } from "typeorm";
+import { InjectRepository } from "typeorm-typedi-extensions";
+import { Service } from "typedi";
+import { HttpStatusCode } from "../../errors/HttpStatusCodes";
+import User from "../users/user.model";
 import { ICreateEvent, IEvent, ISearchEvent } from "./dtos/create.event";
 import Event from "./event.model";
 import CustomError from "../../errors/errorTypes/CustomError";
-import { InjectRepository } from "typeorm-typedi-extensions";
 import EventRepository from "./event.repository";
 import UserRepository from "../users/user.repository";
-import { Service } from "typedi";
 import CategoryRepository from "../category/category.repository";
 import Category from "../category/category.model";
 import FileService from "../file/file.service";
@@ -18,7 +18,7 @@ class EventService {
     @InjectRepository(Event) private eventRepository: EventRepository,
     @InjectRepository(User) private userRepository: UserRepository,
     @InjectRepository(Category) private categoryRepository: CategoryRepository,
-    private readonly fileService: FileService
+    private readonly fileService: FileService,
   ) {}
 
   getEventsSubsCount(id: number) {
@@ -30,6 +30,7 @@ class EventService {
       .getRawOne();
   }
 
+  // fix
   async getEventsPerCategory(categoryId: number, page: number) {
     const LIMIT = 3;
     const SKIP = LIMIT * (page - 1);
@@ -46,7 +47,7 @@ class EventService {
       .getMany();
     return category;
   }
-  //todo - hide passwords
+  // todo - hide passwords
 
   getAllEvents(page: number, limit: number) {
     const skip = limit * (page - 1);
@@ -56,11 +57,15 @@ class EventService {
       relations: ["users"],
     });
   }
+
   deleteEvent(id: number) {
     return this.eventRepository.delete(id);
   }
+
   async createEvent(createEventBody: ICreateEvent) {
-    const { ownerId, body, categoryId, image, type } = createEventBody;
+    const {
+      ownerId, body, categoryId, image, type,
+    } = createEventBody;
     console.log(ownerId, body, categoryId, image, type);
     const owner = await this.userRepository.findOne(ownerId);
     if (!owner) {
@@ -93,7 +98,7 @@ class EventService {
     if (owner_id !== userFromToken) {
       throw new CustomError(
         HttpStatusCode.FORBIDDEN,
-        "Нет прав на изменение этого события!"
+        "Нет прав на изменение этого события!",
       );
     }
     newEvent.description = body.description || newEvent.description;
@@ -101,7 +106,8 @@ class EventService {
     newEvent.date = body.date || newEvent.date;
     return newEvent.save();
   }
-  //todo
+
+  // todo
   async getEventSubscribers(id: number, page: number, limit: number) {
     const LIMIT = limit;
     const SKIP = LIMIT * (page - 1);
@@ -121,9 +127,11 @@ class EventService {
       .getMany();
     return event;
   }
+
   getSingleEvent(id: number) {
     return this.eventRepository.findOne(id, { relations: ["users", "owner"] });
   }
+
   searchEvents(searchDto: ISearchEvent) {
     const { categories, query } = searchDto;
     console.log(searchDto);
@@ -135,7 +143,8 @@ class EventService {
   }
 
   static clearEvents() {
-    return getConnection().createQueryBuilder().delete().from(Event).execute();
+    return getConnection().createQueryBuilder().delete().from(Event)
+      .execute();
   }
 
   static async seedEvents(creatorIds: number[]) {

@@ -1,17 +1,19 @@
 import { Router } from "express";
-import AuthService from "./auth.service";
-import { RegisterUser } from "./dtos/aut.dto";
-import { LoginUser } from "./dtos/aut.dto";
-import Route from "../../middleware/RouteDecorator";
 import { Service } from "typedi";
+import { checkSchema } from "express-validator";
+import AuthService from "./auth.service";
+import { RegisterUser, LoginUser } from "./dtos/aut.dto";
+
+import Route from "../../middleware/RouteDecorator";
 import { RequestPayload } from "../../middleware/types/MetaType";
 import BaseController from "../../middleware/types/BaseController";
-import { checkSchema } from "express-validator";
 import { loginSchema, registrationSchema } from "./validation";
+import upload from "../file/multer.config";
 
-@Service()
+@Service({ id: "auth.controller" })
 class AuthController extends BaseController {
   public router: Router;
+
   constructor(private readonly authService: AuthService) {
     super();
     this.router = Router();
@@ -33,7 +35,7 @@ class AuthController extends BaseController {
     return { user: userInDb, token };
   }
 
-  @Route(["body","file"])
+  @Route(["body", "file"])
   async registerUser(payload: RequestPayload) {
     const {
       first_name,
@@ -52,7 +54,7 @@ class AuthController extends BaseController {
       email,
       role,
       type,
-      image:payload.file
+      image: payload.file,
     });
     const token = this.authService.generateToken({
       email: newUser.email,
@@ -66,7 +68,9 @@ class AuthController extends BaseController {
   initRoutes = () => {
     this.router.post(
       "/register",
-      // checkSchema(registrationSchema),
+      upload.single("file"),
+      checkSchema(registrationSchema),
+
       this.registerUser
     );
     this.router.post("/login", checkSchema(loginSchema), this.loginUser);

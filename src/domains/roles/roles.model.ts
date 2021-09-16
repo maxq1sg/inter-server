@@ -1,4 +1,3 @@
-import { ERole } from "./dto/index";
 import {
   BaseEntity,
   Column,
@@ -8,6 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { ERole } from "./dto/index";
 import Permission from "../permisssions/permissions.model";
 import User from "../users/user.model";
 

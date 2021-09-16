@@ -14,9 +14,10 @@ import { createEventSchema } from "./validation/createEventSchema";
 import { modifyEventSchema } from "./validation/modifyEventSchema";
 import { searchEventSchema } from "./validation/searchEventSchema";
 
-@Service()
+@Service({ id: "event.controller" })
 class EventController extends BaseController {
   public router: Router;
+
   constructor(private readonly eventService: EventService) {
     super();
     this.router = Router();
@@ -35,7 +36,7 @@ class EventController extends BaseController {
     return this.eventService.getAllEvents(page || 1, limit || 5);
   }
 
-  //todo
+  // todo
   @Route(["params"])
   async deleteEvent(payload: RequestPayload) {
     const { id } = payload.params;
@@ -45,13 +46,13 @@ class EventController extends BaseController {
 
   @Route(["body", "file"])
   async createEvent(payload: RequestPayload) {
-    const { ownerId, body, categoryId,type }: ICreateEvent = payload.body;
+    const { ownerId, body, categoryId, type }: ICreateEvent = payload.body;
     const newEvent = await this.eventService.createEvent({
       ownerId,
       body,
       categoryId,
       image: payload.file,
-      type
+      type,
     });
     return newEvent;
   }
@@ -105,9 +106,9 @@ class EventController extends BaseController {
   initRoutes = () => {
     this.router.post(
       "/",
-      // AuthGuard,
-      // PermissionGuard(EPermission.CREATE_EVENT),
-      // checkSchema(createEventSchema),
+      AuthGuard,
+      PermissionGuard(EPermission.CREATE_EVENT),
+      checkSchema(createEventSchema),
       upload.single("file"),
       this.createEvent
     );
@@ -118,9 +119,9 @@ class EventController extends BaseController {
     );
     this.router.put(
       "/",
-      // AuthGuard,
-      // PermissionGuard(EPermission.MODIFY_EVENT_DETAILS),
-      // checkSchema(modifyEventSchema),
+      AuthGuard,
+      PermissionGuard(EPermission.MODIFY_EVENT_DETAILS),
+      checkSchema(modifyEventSchema),
       this.modifyEvent
     );
 

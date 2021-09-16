@@ -1,6 +1,6 @@
-import { EPermission } from "./types/index";
 import { Router } from "express";
 import { Service } from "typedi";
+import { EPermission } from "./types/index";
 import AuthGuard from "../../middleware/AuthGuard";
 import PermissionGuard from "../../middleware/PermissionGuard";
 import Route from "../../middleware/RouteDecorator";
@@ -8,7 +8,7 @@ import BaseController from "../../middleware/types/BaseController";
 import { RequestPayload } from "../../middleware/types/MetaType";
 import PermissionService from "./permissions.service";
 
-@Service()
+@Service({ id: "permission.controller" })
 class PermissionController extends BaseController {
   public router: Router;
 
@@ -25,7 +25,7 @@ class PermissionController extends BaseController {
     return newPermission;
   }
 
-  //todo
+  // todo
   @Route(["body"])
   async changePermissionName(payload: RequestPayload) {
     const {} = payload.body;

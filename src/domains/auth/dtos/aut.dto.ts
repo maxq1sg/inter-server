@@ -28,4 +28,3 @@ export interface AuthResponseBody{
   user:User,
   token:string
 }
-

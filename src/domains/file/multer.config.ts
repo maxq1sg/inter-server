@@ -5,7 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 import CustomRequest from "../../types/CustomRequest";
 
 const storage = multer.diskStorage({
-  destination: function (req: CustomRequest, file: Express.Multer.File, cb) {
+  // fix
+  destination(req: CustomRequest, file: Express.Multer.File, cb) {
     const { type } = req.body;
     const directory = path.join(__dirname, "..", "..", "..", "static", type);
     if (!fs.existsSync(directory)) {
@@ -13,7 +14,7 @@ const storage = multer.diskStorage({
     }
     cb(null, directory);
   },
-  filename: function (req, file, cb) {
+  filename(req, file, cb) {
     const { type } = req.body;
 
     cb(null, `${type}-${uuidv4()}${path.extname(file.originalname)}`);
@@ -28,9 +29,8 @@ function checkFiles(file: Express.Multer.File, cb: FileFilterCallback) {
 
   if (mimetype && extname) {
     return cb(null, true);
-  } else {
-    cb(new Error("Error while adding files"));
   }
+  cb(new Error("Error while adding files"));
 }
 const upload = multer({
   storage,

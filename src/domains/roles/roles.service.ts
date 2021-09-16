@@ -1,12 +1,12 @@
-import { HttpStatusCode } from "./../../errors/HttpStatusCodes";
+import { getConnection } from "typeorm";
+import { Service } from "typedi";
+import { InjectRepository } from "typeorm-typedi-extensions";
+import { HttpStatusCode } from "../../errors/HttpStatusCodes";
 import Permission from "../permisssions/permissions.model";
 import Role from "./roles.model";
 import { AddPermissionsToRoleDto, ERole } from "./dto";
 import PermissionService from "../permisssions/permissions.service";
 import CustomError from "../../errors/errorTypes/CustomError";
-import { getConnection } from "typeorm";
-import { Service } from "typedi";
-import { InjectRepository } from "typeorm-typedi-extensions";
 import RoleRepository from "./roles.repository";
 import PermissionsRepository from "../permisssions/permissions.repository";
 
@@ -17,7 +17,7 @@ class RoleService {
     @InjectRepository(Role)
     private rolesRepository: RoleRepository,
     @InjectRepository(Permission)
-    private permissionsRepository: PermissionsRepository
+    private permissionsRepository: PermissionsRepository,
   ) {}
 
   static seedRoles() {
@@ -29,13 +29,15 @@ class RoleService {
       .returning("id")
       .execute();
   }
+
   static clearAllRoles() {
-    return getConnection().createQueryBuilder().delete().from(Role).execute();
+    return getConnection().createQueryBuilder().delete().from(Role)
+      .execute();
   }
 
-  //костыль
+  // костыль
   async changeAllRoles(dto: AddPermissionsToRoleDto[]) {
-    for (let role of dto) {
+    for (const role of dto) {
       await this.addPermissionsToRole(role);
     }
     return true;
@@ -49,7 +51,7 @@ class RoleService {
   async createNewRoleWithPermissions(name: ERole, permIds: number[]) {
     const role = await this.addNewRole(name);
     const permissionsInDb = await this.permissionService.getPermissionsByIds(
-      permIds
+      permIds,
     );
 
     role.permissions = permissionsInDb;
@@ -63,6 +65,7 @@ class RoleService {
     await role.save();
     return true;
   }
+
   async getPermissionsListToRole(id: number): Promise<Permission[]> {
     const role = await this.rolesRepository.findOne(id, {
       relations: ["permissions"],
@@ -70,7 +73,7 @@ class RoleService {
     if (!role) {
       throw new CustomError(
         HttpStatusCode.BAD_REQUEST,
-        "Такой роли не существует"
+        "Такой роли не существует",
       );
     }
     return role.permissions;

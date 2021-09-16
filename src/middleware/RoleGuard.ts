@@ -1,5 +1,5 @@
-import ForbiddenError from "../errors/errorTypes/ForbiddenError";
 import { NextFunction, Response } from "express";
+import ForbiddenError from "../errors/errorTypes/ForbiddenError";
 import { ERole } from "../domains/roles/dto";
 import CustomRequest from "../types/CustomRequest";
 

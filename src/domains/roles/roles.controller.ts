@@ -1,22 +1,24 @@
-import { EPermission } from "./../permisssions/types/index";
-import { FindRoleByNameDto } from "./dto/index";
-import RoleService from "./roles.service";
+import { Service } from "typedi";
+import { Router } from "express";
+import { EPermission } from "../permisssions/types/index";
 import {
+  FindRoleByNameDto,
   AddPermissionsToRoleDto,
   ChangeAllRolesDto,
   NewRoleWithPermissions,
-} from "./dto";
+} from "./dto/index";
+import RoleService from "./roles.service";
+
 import Route from "../../middleware/RouteDecorator";
 import { RequestPayload } from "../../middleware/types/MetaType";
-import { Service } from "typedi";
-import { Router } from "express";
 import BaseController from "../../middleware/types/BaseController";
 import AuthGuard from "../../middleware/AuthGuard";
 import PermissionGuard from "../../middleware/PermissionGuard";
 
-@Service()
+@Service({ id: "role.controller" })
 class RoleController extends BaseController {
   public router = Router();
+
   constructor(private readonly roleService: RoleService) {
     super();
     this.router = Router();
@@ -57,6 +59,7 @@ class RoleController extends BaseController {
     const success = await this.roleService.changeAllRoles(data);
     return { success };
   }
+
   @Route(["params"])
   async getPermissionsListToRole(payload: RequestPayload) {
     const { id } = payload.params;
@@ -81,6 +84,7 @@ class RoleController extends BaseController {
     await RoleService.clearAllRoles();
     return { message: "succcess" };
   }
+
   @Route(["body"])
   async getRoleByName(payload: RequestPayload) {
     const { name }: FindRoleByNameDto = payload.body;

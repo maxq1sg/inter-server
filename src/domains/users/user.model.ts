@@ -1,5 +1,3 @@
-import Role from "../roles/roles.model";
-import Event from "./../events/event.model";
 import {
   BaseEntity,
   Column,
@@ -12,6 +10,8 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import Role from "../roles/roles.model";
+import Event from "../events/event.model";
 import File from "../file/file.model";
 
 @Entity("users")

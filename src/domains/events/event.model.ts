@@ -11,7 +11,7 @@ import {
 } from "typeorm";
 import Category from "../category/category.model";
 import File from "../file/file.model";
-import User from "./../users/user.model";
+import User from "../users/user.model";
 
 @Entity("events")
 export default class Event extends BaseEntity {
@@ -29,13 +29,14 @@ export default class Event extends BaseEntity {
 
   @ManyToMany(() => User, (user) => user.events, { onDelete: "CASCADE" })
   users: User[];
+
   @ManyToOne(() => User, (user) => user.owner_of_events)
   owner: User;
 
   @ManyToOne(() => Category, (category) => category.events)
   category: Category;
 
-  @OneToOne(() => File, { onDelete:"CASCADE"})
+  @OneToOne(() => File, { onDelete: "CASCADE" })
   @JoinColumn()
   preview: File;
 }

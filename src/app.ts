@@ -2,68 +2,74 @@ import chalk from "chalk";
 import express, { Application } from "express";
 import dotenv from "dotenv";
 import "reflect-metadata";
+import Container, { Inject, Service } from "typedi";
+import { join } from "path";
+import cors from "cors";
+import morgan from "morgan";
 import errorHandler from "./errors/errorHandler";
 import UserController from "./domains/users/user.controller";
-import Container from "typedi";
 import AuthController from "./domains/auth/auth.controller";
 import EventController from "./domains/events/event-controller";
 import PermissionController from "./domains/permisssions/permissions.controller";
 import SubscriptionController from "./domains/subscription/subscription.controller";
 import RoleController from "./domains/roles/roles.controller";
 import CategoryController from "./domains/category/category.controller";
-import { join } from "path";
 import FileController from "./domains/file/file.controller";
-import cors from "cors";
-import morgan from "morgan";
 
+@Service({ id: "app" })
 export default class App {
-  private _app: Application;
-  private _userController: UserController;
-  private _authController: AuthController;
-  private _eventController: EventController;
-  private _permissionController: PermissionController;
-  private _subscriptionController: SubscriptionController;
-  private _rolesController: RoleController;
-  private _categoryController: CategoryController;
-  private _fileController: FileController;
+  public app: Application;
+
+  @Inject("user.controller")
+  private userController: UserController;
+
+  @Inject("auth.controller")
+  private authController: AuthController;
+
+  @Inject("event.controller")
+  private eventController: EventController;
+
+  @Inject("permission.controller")
+  private permissionController: PermissionController;
+
+  @Inject("subscription.controller")
+  private subscriptionController: SubscriptionController;
+
+  @Inject("role.controller")
+  private roleController: RoleController;
+
+  @Inject("category.controller")
+  private categoryController: CategoryController;
+
+  @Inject("file.controller")
+  private fileController: FileController;
+
   constructor() {
-    dotenv.config();
-
-    this._userController = Container.get(UserController);
-    this._authController = Container.get(AuthController);
-    this._eventController = Container.get(EventController);
-    this._permissionController = Container.get(PermissionController);
-    this._subscriptionController = Container.get(SubscriptionController);
-    this._rolesController = Container.get(RoleController);
-    this._categoryController = Container.get(CategoryController);
-    this._fileController = Container.get(FileController);
-
-    this._app = express();
-    this._app.use(express.json());
-    this._app.use(morgan("combined"));
-    this._app.use(cors({ origin: process.env.CLIENT }));
-
-    this._app.use("/static", express.static(join(__dirname, "..", "static")));
-    this._app.use(express.urlencoded({ extended: true }));
-    this._app.use("/api/events", this._eventController.router);
-    this._app.use("/api/users", this._userController.router);
-    this._app.use("/api/sub", this._subscriptionController.router);
-    this._app.use("/api/auth", this._authController.router);
-    this._app.use("/api/roles", this._rolesController.router);
-    this._app.use("/api/perm", this._permissionController.router);
-    this._app.use("/api/category", this._categoryController.router);
-    this._app.use("/api/file", this._fileController.router);
-    this._app.use(errorHandler);
+    this.app = express();
+    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(express.json());
+    this.app.use(morgan("combined"));
+    this.app.use(cors({ origin: process.env.CLIENT }));
+    this.app.use("/static", express.static(join(__dirname, "..", "static")));
   }
+
   startServer() {
-    const PORT = process.env.APP_PORT || 4000;
-    this._app.listen(PORT, () => {
+    const PORT = process.env.APPPORT || 4000;
+    this.app.listen(PORT, () => {
       console.log(chalk.green(`server is running on port ${PORT}`));
     });
-    return this._app;
+    return this;
   }
-
-  get app() {
-    return this._app;
+  initRoutes() {
+    this.app.use("/api/events", this.eventController.router);
+    this.app.use("/api/users", this.userController.router);
+    this.app.use("/api/sub", this.subscriptionController.router);
+    this.app.use("/api/auth", this.authController.router);
+    this.app.use("/api/roles", this.roleController.router);
+    this.app.use("/api/perm", this.permissionController.router);
+    this.app.use("/api/category", this.categoryController.router);
+    this.app.use("/api/file", this.fileController.router);
+    this.app.use(errorHandler);
+    return this;
   }
 }

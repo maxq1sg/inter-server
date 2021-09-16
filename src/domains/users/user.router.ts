@@ -13,7 +13,7 @@ export default function initUserRoute(router: Router) {
     "/",
     AuthGuard,
     PermissionGuard(EPermission.SHOW_USERS_LIST),
-    this.getAllUsers
+    this.getAllUsers,
   );
   router.put("/role", this.changeUsersRole);
 }

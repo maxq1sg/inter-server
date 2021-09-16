@@ -6,7 +6,7 @@ import CustomError from "../../errors/errorTypes/CustomError";
 import FileService from "../file/file.service";
 import Role from "../roles/roles.model";
 import RoleRepository from "../roles/roles.repository";
-import { HttpStatusCode } from "./../../errors/HttpStatusCodes";
+import { HttpStatusCode } from "../../errors/HttpStatusCodes";
 import { ChangeUsersRole, CreateUser } from "./dtos/user-dto";
 import User from "./user.model";
 import UserRepository from "./user.repository";
@@ -16,7 +16,7 @@ class UserService {
   constructor(
     @InjectRepository(User) private userRepository: UserRepository,
     @InjectRepository(Role) private roleRepository: RoleRepository,
-    private readonly fileService: FileService
+    private readonly fileService: FileService,
   ) {}
 
   async getSingleUser(id: number) {
@@ -28,6 +28,7 @@ class UserService {
     }
     return user;
   }
+
   async changeUsersRole({ role_id, user_id }: ChangeUsersRole) {
     const role = await this.roleRepository.findOne(role_id);
     const user = await this.userRepository.findOne(user_id);
@@ -35,7 +36,7 @@ class UserService {
     if (!role || !user) {
       throw new CustomError(
         HttpStatusCode.BAD_REQUEST,
-        "Error while changing role for user"
+        "Error while changing role for user",
       );
     }
 
@@ -44,12 +45,13 @@ class UserService {
 
     return user;
   }
+
   async deleteUser(id: number) {
     const data = await this.userRepository.delete(id);
     if (!data?.affected) {
       throw new CustomError(
         HttpStatusCode.NOT_FOUND,
-        "Ошибка при удалении пользователя"
+        "Error while deleting user",
       );
     }
     return data;
@@ -60,7 +62,7 @@ class UserService {
       relations: ["events"],
     });
     if (!user) {
-      throw new CustomError(HttpStatusCode.NOT_FOUND, "Пользователь не найден");
+      throw new CustomError(HttpStatusCode.NOT_FOUND, "User not found");
     }
     return user.events;
   }
@@ -74,20 +76,22 @@ class UserService {
   async createUser(body: CreateUser) {
     const hashedPassword = await bcrypt.hash(
       body.password,
-      +process.env.SALT_ROUNDS
+      +process.env.SALT_ROUNDS,
     );
     body.password = hashedPassword;
     const avatar = await this.fileService.addNewFileToStorage(
       body.image,
-      body.type
+      body.type,
     );
 
     const newUser = this.userRepository.create({ ...body, avatar });
     await newUser.save();
     return newUser;
   }
+
   static clearUsers() {
-    return getConnection().createQueryBuilder().delete().from(User).execute();
+    return getConnection().createQueryBuilder().delete().from(User)
+      .execute();
   }
 
   static async seedUsers() {

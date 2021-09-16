@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import chalk from "chalk";
 import Container from "typedi";
 import { createConnection, useContainer } from "typeorm";
@@ -9,12 +8,6 @@ import User from "./domains/users/user.model";
 import Category from "./domains/category/category.model";
 import File from "./domains/file/file.model";
 
-dotenv.config();
-
-export enum EMode {
-  TEST = "TEST",
-  DEV = "DEV",
-}
 
 export default async function setupDB(mode: EMode) {
   useContainer(Container);
@@ -25,10 +18,10 @@ export default async function setupDB(mode: EMode) {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database:
-      mode == EMode.DEV ? process.env.DB_NAME : process.env.TEST_DB_NAME,
+      mode === EMode.DEV ? process.env.DB_NAME : process.env.TEST_DB_NAME,
     entities: [Event, User, Role, Permission, Category, File],
     synchronize: true,
-    logging:false
+    logging: false,
   });
   console.log(
     chalk.green(
@@ -36,4 +29,9 @@ export default async function setupDB(mode: EMode) {
     )
   );
   return connection;
+}
+
+export enum EMode {
+  TEST = "TEST",
+  DEV = "DEV",
 }

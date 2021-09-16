@@ -6,7 +6,7 @@ export default function errorHandler(
   error: BaseError,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const statusCode = error.httpCode || HttpStatusCode.INTERNAL_SERVER;
   const { body } = error;

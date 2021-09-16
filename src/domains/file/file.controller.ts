@@ -6,7 +6,7 @@ import { RequestPayload } from "../../middleware/types/MetaType";
 import FileService from "./file.service";
 import upload from "./multer.config";
 
-@Service()
+@Service({ id: "file.controller" })
 class FileController extends BaseController {
   public router: Router;
 
@@ -16,15 +16,15 @@ class FileController extends BaseController {
     this.initRoutes();
   }
 
-  initRoutes = () => {
+  initRoutes() {
     this.router.post("/", upload.single("file"), this.addNewFileToStorage);
-  };
+  }
 
+  // fix
   @Route(["body", "file"])
   async addNewFileToStorage(payload: RequestPayload) {
     const { type } = payload.body;
-    const data = await this.fileService.addNewFileToStorage(payload.file, type);
-    return data;
+    return this.fileService.addNewFileToStorage(payload.file, type);
   }
 }
 export default FileController;

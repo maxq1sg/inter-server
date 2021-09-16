@@ -1,8 +1,8 @@
-import { TokenPayload } from "./../domains/auth/dtos/aut.dto";
-import { HttpStatusCode } from "./../errors/HttpStatusCodes";
 import { NextFunction, Response } from "express";
 import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
+import { HttpStatusCode } from "../errors/HttpStatusCodes";
+import { TokenPayload } from "../domains/auth/dtos/aut.dto";
 import CustomError from "../errors/errorTypes/CustomError";
 import CustomRequest from "../types/CustomRequest";
 
@@ -20,13 +20,13 @@ const AuthGuard = asyncHandler(
     try {
       const decodedUser = jwt.verify(
         token,
-        process.env.JWT_SECRET
+        process.env.JWT_SECRET,
       ) as TokenPayload;
       req.user = decodedUser;
       next();
     } catch (error) {
       throw new CustomError(HttpStatusCode.UNAUTHORIZED, "Войдите в систему!");
     }
-  }
+  },
 );
 export default AuthGuard;

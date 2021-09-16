@@ -1,7 +1,7 @@
-import { ECategory } from "./types/index";
 import { getConnection } from "typeorm";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
+import { ECategory } from "./types/index";
 import Category from "./category.model";
 import CategoryRepository from "./category.repository";
 import EventRepository from "../events/event.repository";
@@ -11,13 +11,14 @@ import Event from "../events/event.model";
 class CategoryService {
   constructor(
     @InjectRepository(Category) private categoryRepository: CategoryRepository,
-    @InjectRepository(Event) private eventRepository: EventRepository
+    @InjectRepository(Event) private eventRepository: EventRepository,
   ) {}
 
   addNewCategory(name: string) {
     const newCategory = this.categoryRepository.create({ name });
     return newCategory.save();
   }
+
   getAllCategories() {
     return this.categoryRepository.find();
   }
@@ -31,6 +32,7 @@ class CategoryService {
       .returning("id")
       .execute();
   }
+
   static clearAllCategories() {
     return getConnection()
       .createQueryBuilder()

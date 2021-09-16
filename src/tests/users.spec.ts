@@ -1,15 +1,15 @@
 import supertest from "supertest";
 
 import { Connection } from "typeorm";
+import { Application } from "express";
 import UserService from "../domains/users/user.service";
 import EventService from "../domains/events/event.service";
 import authorizeAsRole from "./utils/authorizeAsRole";
 import { ERole } from "../domains/roles/dto";
 import setupDB, { EMode } from "../setupDb";
 import App from "../app";
-import { Application } from "express";
 
-describe("test users route", function () {
+describe("test users route", () => {
   let request: supertest.SuperTest<supertest.Test>;
   let connection: Connection;
   let user_ids: number[];
@@ -38,7 +38,6 @@ describe("test users route", function () {
     const response = await request
       .get("/api/users")
       .set("Authorization", `Bearer ${token}`);
-
     expect(response.statusCode).toBe(200);
   });
 
