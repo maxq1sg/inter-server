@@ -21,6 +21,11 @@ class CategoryController extends BaseController {
     const newCategory = await this.categoryService.addNewCategory(name);
     return newCategory;
   }
+  @Route(["query"])
+  getEventIdByName(payload: RequestPayload) {
+    const { name } = payload.query;
+    return this.categoryService.getCategoryIdByname(name);
+  }
 
   @Route([])
   getAllCategories() {
@@ -63,6 +68,7 @@ class CategoryController extends BaseController {
   }
   initRoutes = () => {
     this.router.get("/", this.getAllCategories);
+    this.router.get("/single", this.getEventIdByName);
     this.router.get("/test", this.test);
     this.router.post("/", this.addNewCategory);
     this.router.post("/seed", this.seedCategories);

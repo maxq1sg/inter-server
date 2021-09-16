@@ -32,10 +32,11 @@ class EventController extends BaseController {
 
   @Route(["query"])
   getAllEvents(payload: RequestPayload) {
-    const { page, limit } = payload.query;
+    const { page, limit, category } = payload.query;
     return this.eventService.getAllEvents(page || 1, limit || 5);
   }
 
+  
   // todo
   @Route(["params"])
   async deleteEvent(payload: RequestPayload) {
@@ -100,7 +101,7 @@ class EventController extends BaseController {
   async getEventsPerCategory(payload: RequestPayload) {
     const { id } = payload.params;
     const { page } = payload.query;
-    return this.eventService.getEventsPerCategory(+id, page);
+    return this.eventService.getEventsPerCategory(+id, page || 1);
   }
 
   initRoutes = () => {
@@ -126,6 +127,7 @@ class EventController extends BaseController {
     );
 
     this.router.get("/category/:id", this.getEventsPerCategory);
+
     this.router.get("/:id", this.getSinglEvent);
     this.router.get("/:id/subs", this.getEventSubs);
     this.router.get("/:id/subs/count", this.getEventSubsCount);

@@ -18,9 +18,19 @@ class EventService {
     @InjectRepository(Event) private eventRepository: EventRepository,
     @InjectRepository(User) private userRepository: UserRepository,
     @InjectRepository(Category) private categoryRepository: CategoryRepository,
-    private readonly fileService: FileService,
+    private readonly fileService: FileService
   ) {}
 
+  // async getEventsByCategoryName(name: string, limit: number, page: number) {
+  //   const category = await this.categoryRepository.findOne({ where: { name } });
+  //   const skip = limit * (page - 1);
+  //   return this.eventRepository.find({
+  //     where: { category },
+  //     skip,
+  //     take: limit,
+  //   });
+  // }
+  
   getEventsSubsCount(id: number) {
     return this.eventRepository
       .createQueryBuilder("event")
@@ -35,17 +45,16 @@ class EventService {
     const LIMIT = 3;
     const SKIP = LIMIT * (page - 1);
 
-    const category = await this.categoryRepository
-      .createQueryBuilder("category")
-      .where("category.id = :id", { id: categoryId })
-      .getOne();
-    category.events = await this.eventRepository
+    // const category = await this.categoryRepository
+    //   .createQueryBuilder("category")
+    //   .where("category.id = :id", { id: categoryId })
+    //   .getOne();
+    return this.eventRepository
       .createQueryBuilder("event")
-      .where("event.categoryId=:id", { id: category.id })
+      .where("event.categoryId=:id", { id: categoryId })
       .skip(SKIP)
       .take(LIMIT)
       .getMany();
-    return category;
   }
   // todo - hide passwords
 
@@ -63,9 +72,7 @@ class EventService {
   }
 
   async createEvent(createEventBody: ICreateEvent) {
-    const {
-      ownerId, body, categoryId, image, type,
-    } = createEventBody;
+    const { ownerId, body, categoryId, image, type } = createEventBody;
     console.log(ownerId, body, categoryId, image, type);
     const owner = await this.userRepository.findOne(ownerId);
     if (!owner) {
@@ -98,7 +105,7 @@ class EventService {
     if (owner_id !== userFromToken) {
       throw new CustomError(
         HttpStatusCode.FORBIDDEN,
-        "Нет прав на изменение этого события!",
+        "Нет прав на изменение этого события!"
       );
     }
     newEvent.description = body.description || newEvent.description;
@@ -143,8 +150,7 @@ class EventService {
   }
 
   static clearEvents() {
-    return getConnection().createQueryBuilder().delete().from(Event)
-      .execute();
+    return getConnection().createQueryBuilder().delete().from(Event).execute();
   }
 
   static async seedEvents(creatorIds: number[]) {
