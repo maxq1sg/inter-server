@@ -20,19 +20,19 @@ export default class User extends BaseEntity {
   id: number;
 
   @Column({ length: 30 })
-  first_name: string;
+  firstName: string;
 
   @Column({ length: 100 })
   password: string;
 
   @Column({ length: 30 })
-  last_name: string;
+  lastName: string;
 
   @Column({ type: "varchar", unique: true })
   email: string;
 
   @Column({ type: "simple-json", nullable: true })
-  add_data: { address: string; is_married: boolean };
+  addData: { address: string; is_married: boolean };
 
   @ManyToMany(() => Event, (event) => event.users, { cascade: true })
   @JoinTable({
@@ -52,7 +52,7 @@ export default class User extends BaseEntity {
   role: Role;
 
   @OneToMany(() => Event, (event) => event.owner)
-  owner_of_events: Event[];
+  ownerOfEvents: Event[];
 
   @OneToOne(() => File, { onDelete: "CASCADE" })
   @JoinColumn()

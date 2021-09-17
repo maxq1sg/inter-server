@@ -1,3 +1,4 @@
+import { CreateUser } from './../users/dtos/user-dto';
 import { Router } from "express";
 import { Service } from "typedi";
 import { checkSchema } from "express-validator";
@@ -20,10 +21,11 @@ class AuthController extends BaseController {
     this.initRoutes();
   }
 
+  //todo убрать any
   @Route(["body"])
   async loginUser(payload: RequestPayload) {
     const { email, password }: LoginUser = payload.body;
-    const { password: _, ...userInDb } = await this.authService.loginUser({
+    const { password: _, ...userInDb }:any = await this.authService.loginUser({
       email,
       password,
     });
@@ -38,9 +40,9 @@ class AuthController extends BaseController {
   @Route(["body", "file"])
   async registerUser(payload: RequestPayload) {
     const {
-      first_name,
-      last_name,
-      add_data,
+      firstName,
+      lastName,
+      addData,
       password,
       email,
       role,
@@ -48,9 +50,9 @@ class AuthController extends BaseController {
     }: RegisterUser = payload.body;
 
     const newUser = await this.authService.registerUser({
-      first_name,
-      last_name,
-      add_data,
+      firstName,
+      lastName,
+      addData,
       password,
       email,
       role,

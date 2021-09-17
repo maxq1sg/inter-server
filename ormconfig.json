@@ -1,0 +1,13 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "postgres",
+    "password": "root",
+    "database": "events-db",
+    "entities": ["/dist/src/domains/**/*.model.{ts,js}"],
+    "migrations": ["/dist/src/migrations/*.js"],
+    "cli": {
+        "migrationsDir": "migration"
+    }
+}

@@ -16,12 +16,12 @@ class UserService {
   constructor(
     @InjectRepository(User) private userRepository: UserRepository,
     @InjectRepository(Role) private roleRepository: RoleRepository,
-    private readonly fileService: FileService,
+    private readonly fileService: FileService
   ) {}
 
   async getSingleUser(id: number) {
     const user = await this.userRepository.findOne(id, {
-      relations: ["events", "role", "owner_of_events"],
+      relations: ["events", "role", "ownerOfEvents"],
     });
     if (!user) {
       throw new CustomError(HttpStatusCode.BAD_REQUEST, "user doesn't exist");
@@ -36,7 +36,7 @@ class UserService {
     if (!role || !user) {
       throw new CustomError(
         HttpStatusCode.BAD_REQUEST,
-        "Error while changing role for user",
+        "Error while changing role for user"
       );
     }
 
@@ -51,7 +51,7 @@ class UserService {
     if (!data?.affected) {
       throw new CustomError(
         HttpStatusCode.NOT_FOUND,
-        "Error while deleting user",
+        "Error while deleting user"
       );
     }
     return data;
@@ -69,19 +69,19 @@ class UserService {
 
   findAllUsers() {
     return this.userRepository.find({
-      select: ["add_data", "first_name", "last_name", "email"],
+      select: ["addData", "firstName", "lastName", "email"],
     });
   }
 
   async createUser(body: CreateUser) {
     const hashedPassword = await bcrypt.hash(
       body.password,
-      +process.env.SALT_ROUNDS,
+      +process.env.SALT_ROUNDS
     );
     body.password = hashedPassword;
     const avatar = await this.fileService.addNewFileToStorage(
       body.image,
-      body.type,
+      body.type
     );
 
     const newUser = this.userRepository.create({ ...body, avatar });
@@ -90,8 +90,7 @@ class UserService {
   }
 
   static clearUsers() {
-    return getConnection().createQueryBuilder().delete().from(User)
-      .execute();
+    return getConnection().createQueryBuilder().delete().from(User).execute();
   }
 
   static async seedUsers() {
@@ -105,33 +104,33 @@ class UserService {
       .into(User)
       .values([
         {
-          first_name: "ADM",
+          firstName: "ADM",
           email: "admin@gmail.com",
           password,
-          last_name: "bernadsk",
-          add_data: {
+          lastName: "bernadsk",
+          addData: {
             is_married: false,
             address: "grodno",
           },
           role: admin,
         },
         {
-          first_name: "edit",
+          firstName: "edit",
           email: "editor@gmail.com",
           password,
-          last_name: "ber",
-          add_data: {
+          lastName: "ber",
+          addData: {
             is_married: false,
             address: "grodno",
           },
           role: editor,
         },
         {
-          first_name: "user",
+          firstName: "user",
           email: "user@gmail.com",
           password,
-          last_name: "ber",
-          add_data: {
+          lastName: "ber",
+          addData: {
             is_married: false,
             address: "grodno",
           },

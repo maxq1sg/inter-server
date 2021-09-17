@@ -3,12 +3,12 @@ import Role from "../../roles/roles.model";
 import User from "../../users/user.model";
 
 export interface RegisterUser {
-  first_name: string;
+  firstName: string;
   email: string;
   password: string;
-  last_name: string;
-  add_data?: {
-    is_married: boolean;
+  lastName: string;
+  addData?: {
+    isMarried: boolean;
     address: string;
   };
   role?: Role;

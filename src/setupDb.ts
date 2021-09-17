@@ -8,7 +8,6 @@ import User from "./domains/users/user.model";
 import Category from "./domains/category/category.model";
 import File from "./domains/file/file.model";
 
-
 export default async function setupDB(mode: EMode) {
   useContainer(Container);
   const connection = await createConnection({
@@ -17,11 +16,16 @@ export default async function setupDB(mode: EMode) {
     port: +process.env.DB_PORT,
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
+    entities: [Event, User, Role, Permission, Category, File],
+    // entities:[__dirname+"/domains/**/*.model.{js,ts}"],
+    synchronize: true,
+    migrations: ["./migrations/*.ts"],
+    cli: {
+      migrationsDir: "migration",
+    },
+    logging: false,
     database:
       mode === EMode.DEV ? process.env.DB_NAME : process.env.TEST_DB_NAME,
-    entities: [Event, User, Role, Permission, Category, File],
-    synchronize: true,
-    logging: false,
   });
   console.log(
     chalk.green(

@@ -30,7 +30,7 @@ export default class Event extends BaseEntity {
   @ManyToMany(() => User, (user) => user.events, { onDelete: "CASCADE" })
   users: User[];
 
-  @ManyToOne(() => User, (user) => user.owner_of_events)
+  @ManyToOne(() => User, (user) => user.ownerOfEvents)
   owner: User;
 
   @ManyToOne(() => Category, (category) => category.events)

@@ -24,5 +24,5 @@ export interface ISearchEvent {
 export interface IGetEvnts {
   page?: number;
   limit?: number;
-  category?: string;
+  category?: number;
 }

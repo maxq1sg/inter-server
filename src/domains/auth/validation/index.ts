@@ -6,7 +6,7 @@ const MIN_NAME_LENGTH = 2;
 const MAX_NAME_LENGTH = 25;
 
 export const registrationSchema: Schema = {
-  first_name: {
+  firstName: {
     notEmpty: {
       errorMessage: "first_name is required!",
     },
@@ -16,7 +16,7 @@ export const registrationSchema: Schema = {
     },
   },
 
-  last_name: {
+  lastName: {
     notEmpty: {
       errorMessage: "last_name is required!",
     },

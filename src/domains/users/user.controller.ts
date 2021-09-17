@@ -60,18 +60,18 @@ class UserController extends BaseController {
   @Route(["body", "file"])
   async createUser(payload: RequestPayload) {
     const {
-      first_name,
-      last_name,
-      add_data,
+      firstName,
+      lastName,
+      addData,
       password,
       email,
       role,
       type,
     }: CreateUser = payload.body;
     const newUser = await this.userService.createUser({
-      first_name,
-      last_name,
-      add_data,
+      firstName,
+      lastName,
+      addData,
       password,
       email,
       role,
