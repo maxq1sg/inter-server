@@ -8,6 +8,7 @@ const storage = multer.diskStorage({
   // fix
   destination(req: CustomRequest, file: Express.Multer.File, cb) {
     const { type } = req.body;
+    console.log(type)
     const directory = path.join(__dirname, "..", "..", "..", "static", type);
     if (!fs.existsSync(directory)) {
       fs.mkdirSync(directory, { recursive: true });

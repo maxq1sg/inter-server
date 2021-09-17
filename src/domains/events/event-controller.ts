@@ -8,7 +8,12 @@ import BaseController from "../../middleware/types/BaseController";
 import { RequestPayload } from "../../middleware/types/MetaType";
 import upload from "../file/multer.config";
 import { EPermission } from "../permisssions/types";
-import { ICreateEvent, IModifyEvent, ISearchEvent } from "./dtos/create.event";
+import {
+  ICreateEvent,
+  IGetEvnts,
+  IModifyEvent,
+  ISearchEvent,
+} from "./dtos/event.dto";
 import EventService from "./event.service";
 import { createEventSchema } from "./validation/createEventSchema";
 import { modifyEventSchema } from "./validation/modifyEventSchema";
@@ -31,12 +36,11 @@ class EventController extends BaseController {
   }
 
   @Route(["query"])
-  getAllEvents(payload: RequestPayload) {
-    const { page, limit, category } = payload.query;
-    return this.eventService.getAllEvents(page || 1, limit || 5);
+  getEvents(payload: RequestPayload) {
+    const { page, limit, category }: IGetEvnts = payload.query;
+    return this.eventService.getEvents(page || 1, limit || 5, category);
   }
 
-  
   // todo
   @Route(["params"])
   async deleteEvent(payload: RequestPayload) {
@@ -126,12 +130,11 @@ class EventController extends BaseController {
       this.modifyEvent
     );
 
-    this.router.get("/category/:id", this.getEventsPerCategory);
-
+    // this.router.get("/category/:id", this.getEventsPerCategory);
     this.router.get("/:id", this.getSinglEvent);
     this.router.get("/:id/subs", this.getEventSubs);
     this.router.get("/:id/subs/count", this.getEventSubsCount);
-    this.router.get("/", this.getAllEvents);
+    this.router.get("/", this.getEvents);
     this.router.delete("/:id", this.deleteEvent);
   };
 }

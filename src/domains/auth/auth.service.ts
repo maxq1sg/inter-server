@@ -14,14 +14,21 @@ class AuthService {
 
   async registerUser(body: RegisterUser) {
     const {
-      first_name, last_name, add_data, password, email, role, type, image,
+      first_name,
+      last_name,
+      add_data,
+      password,
+      email,
+      role,
+      type,
+      image,
     } = body;
 
     const candidate = await User.findOne({ where: { email } });
     if (candidate) {
       throw new CustomError(
         HttpStatusCode.UNAUTHORIZED,
-        "User with such email already exists",
+        "User with such email already exists"
       );
     }
     const usersRole = await Role.findOne({ where: { name: role || "USER" } });
@@ -47,7 +54,7 @@ class AuthService {
     if (!userInDb) {
       throw new CustomError(
         HttpStatusCode.UNAUTHORIZED,
-        "Введены неверные данные",
+        "Введены неверные данные"
       );
     }
     const isValid = await bcrypt.compare(password, userInDb?.password);
@@ -56,7 +63,7 @@ class AuthService {
     }
     throw new CustomError(
       HttpStatusCode.UNAUTHORIZED,
-      "Введены неверные данные",
+      "Введены неверные данные"
     );
   }
 

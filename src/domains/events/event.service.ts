@@ -3,7 +3,7 @@ import { InjectRepository } from "typeorm-typedi-extensions";
 import { Service } from "typedi";
 import { HttpStatusCode } from "../../errors/HttpStatusCodes";
 import User from "../users/user.model";
-import { ICreateEvent, IEvent, ISearchEvent } from "./dtos/create.event";
+import { ICreateEvent, IEvent, ISearchEvent } from "./dtos/event.dto";
 import Event from "./event.model";
 import CustomError from "../../errors/errorTypes/CustomError";
 import EventRepository from "./event.repository";
@@ -30,7 +30,7 @@ class EventService {
   //     take: limit,
   //   });
   // }
-  
+
   getEventsSubsCount(id: number) {
     return this.eventRepository
       .createQueryBuilder("event")
@@ -58,8 +58,17 @@ class EventService {
   }
   // todo - hide passwords
 
-  getAllEvents(page: number, limit: number) {
+  getEvents(page: number, limit: number, category: number) {
     const skip = limit * (page - 1);
+    if (category) {
+      return this.eventRepository
+        .createQueryBuilder("event")
+        .where("event.categoryId=:id", { id: category })
+        .skip(skip)
+        .take(limit)
+        .getMany();
+    }
+
     return this.eventRepository.find({
       take: limit,
       skip,

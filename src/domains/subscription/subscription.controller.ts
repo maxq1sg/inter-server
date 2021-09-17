@@ -41,13 +41,13 @@ class SubscriptionController extends BaseController {
       "/add",
       // AuthGuard,
       // PermissionGuard(EPermission.EVENT_SUBSCRIPTION),
-      this.createSubscription,
+      this.createSubscription
     );
     this.router.post(
       "/cancel",
       // AuthGuard,
       // PermissionGuard(EPermission.EVENT_SUBSCRIPTION),
-      this.cancelSubscription,
+      this.cancelSubscription
     );
   };
 }

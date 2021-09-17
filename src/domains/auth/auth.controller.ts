@@ -46,6 +46,7 @@ class AuthController extends BaseController {
       role,
       type,
     }: RegisterUser = payload.body;
+
     const newUser = await this.authService.registerUser({
       first_name,
       last_name,

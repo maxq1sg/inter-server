@@ -20,3 +20,9 @@ export interface ISearchEvent {
   categories: number[];
   query: string;
 }
+
+export interface IGetEvnts {
+  page?: number;
+  limit?: number;
+  category?: string;
+}
