@@ -117,9 +117,9 @@ class EventController extends BaseController {
   initRoutes = () => {
     this.router.post(
       "/",
-      AuthGuard,
-      PermissionGuard(EPermission.CREATE_EVENT),
-      checkSchema(createEventSchema),
+      // AuthGuard,
+      // PermissionGuard(EPermission.CREATE_EVENT),
+      // checkSchema(createEventSchema),
       upload.single("file"),
       this.createEvent
     );

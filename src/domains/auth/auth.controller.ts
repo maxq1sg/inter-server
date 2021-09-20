@@ -1,4 +1,4 @@
-import { CreateUser } from './../users/dtos/user-dto';
+import { CreateUser } from "./../users/dtos/user-dto";
 import { Router } from "express";
 import { Service } from "typedi";
 import { checkSchema } from "express-validator";
@@ -25,7 +25,7 @@ class AuthController extends BaseController {
   @Route(["body"])
   async loginUser(payload: RequestPayload) {
     const { email, password }: LoginUser = payload.body;
-    const { password: _, ...userInDb }:any = await this.authService.loginUser({
+    const { password: _, ...userInDb }: any = await this.authService.loginUser({
       email,
       password,
     });

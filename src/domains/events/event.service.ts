@@ -72,7 +72,10 @@ class EventService {
     return this.eventRepository.find({
       take: limit,
       skip,
-      relations: ["users"],
+      relations: ["users", "category", "preview"],
+      order: {
+        id: "DESC",
+      },
     });
   }
 

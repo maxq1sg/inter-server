@@ -38,29 +38,25 @@ class AuthService {
   }
 
   async loginUser(body: LoginUser) {
-    return new Promise((res) => {
-      setTimeout(async () => {
-        const { email, password } = body;
-        const userInDb = await User.findOne({
-          where: { email },
-          relations: ["role"],
-        });
-        if (!userInDb) {
-          throw new CustomError(
-            HttpStatusCode.UNAUTHORIZED,
-            "Введены неверные данные"
-          );
-        }
-        const isValid = await bcrypt.compare(password, userInDb?.password);
-        if (isValid) {
-          res(userInDb);
-        }
-        throw new CustomError(
-          HttpStatusCode.UNAUTHORIZED,
-          "Введены неверные данные"
-        );
-      }, 2000);
+    const { email, password } = body;
+    const userInDb = await User.findOne({
+      where: { email },
+      relations: ["role"],
     });
+    if (!userInDb) {
+      throw new CustomError(
+        HttpStatusCode.UNAUTHORIZED,
+        "Введены неверные данные"
+      );
+    }
+    const isValid = await bcrypt.compare(password, userInDb?.password);
+    if (isValid) {
+      return userInDb;
+    }
+    throw new CustomError(
+      HttpStatusCode.UNAUTHORIZED,
+      "Введены неверные данные"
+    );
   }
 
   generateToken(payload: TokenPayload) {
