@@ -1,3 +1,4 @@
+import CustomRequest from "../../../types/CustomRequest";
 import { FileType } from "../../../types/FileType";
 
 export interface IEvent {
@@ -25,4 +26,11 @@ export interface IGetEvnts {
   page?: number;
   limit?: number;
   category?: number;
+}
+
+export class GetSingleEventDto {
+  params: any;
+  constructor(req: CustomRequest) {
+    this.params = req.params;
+  }
 }

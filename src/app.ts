@@ -1,8 +1,7 @@
 import chalk from "chalk";
 import express, { Application } from "express";
-import dotenv from "dotenv";
 import "reflect-metadata";
-import Container, { Inject, Service } from "typedi";
+import { Inject, Service } from "typedi";
 import { join } from "path";
 import cors from "cors";
 import morgan from "morgan";

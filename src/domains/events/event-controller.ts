@@ -30,6 +30,13 @@ class EventController extends BaseController {
   }
 
   @Route(["params"])
+  async getSinglEvent(payload: RequestPayload) {
+    const { id } = payload.params;
+    const event = await this.eventService.getSingleEvent(+id);
+    return event;
+  }
+
+  @Route(["params"])
   async getEventSubsCount(payload: RequestPayload) {
     const { id } = payload.params;
     return this.eventService.getEventsSubsCount(+id);
@@ -86,13 +93,6 @@ class EventController extends BaseController {
     return eventSubs;
   }
 
-  @Route(["params"])
-  async getSinglEvent(payload: RequestPayload) {
-    const { id } = payload.params;
-    const event = await this.eventService.getSingleEvent(+id);
-    return event;
-  }
-
   @Route(["body"])
   async searchEvents(payload: RequestPayload) {
     const { query, categories }: ISearchEvent = payload.body;
@@ -106,6 +106,12 @@ class EventController extends BaseController {
     const { id } = payload.params;
     const { page } = payload.query;
     return this.eventService.getEventsPerCategory(+id, page || 1);
+  }
+
+  @Route(["body"])
+  async seedEvents(payload: RequestPayload) {
+    const { eventIds } = payload.body;
+    return EventService.seedEvents(eventIds);
   }
 
   initRoutes = () => {
@@ -129,8 +135,8 @@ class EventController extends BaseController {
       checkSchema(modifyEventSchema),
       this.modifyEvent
     );
-
-    // this.router.get("/category/:id", this.getEventsPerCategory);
+    this.router.post("/seed", this.seedEvents);
+    this.router.get("/category/:id", this.getEventsPerCategory);
     this.router.get("/:id", this.getSinglEvent);
     this.router.get("/:id/subs", this.getEventSubs);
     this.router.get("/:id/subs/count", this.getEventSubsCount);
