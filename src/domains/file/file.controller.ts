@@ -6,6 +6,7 @@ import { RequestPayload } from "../../middleware/types/MetaType";
 import FileService from "./file.service";
 import upload from "./multer.config";
 
+//todo symbols
 @Service({ id: "file.controller" })
 class FileController extends BaseController {
   public router: Router;

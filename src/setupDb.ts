@@ -17,7 +17,6 @@ export default async function setupDB(mode: EMode) {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     entities: [Event, User, Role, Permission, Category, File],
-    // entities:[__dirname+"/domains/**/*.model.{js,ts}"],
     synchronize: true,
     migrations: ["./migrations/*.ts"],
     cli: {

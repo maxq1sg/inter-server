@@ -153,9 +153,10 @@ class EventService {
 
   searchEvents(searchDto: ISearchEvent) {
     const { categories, query } = searchDto;
-    console.log(searchDto);
     return this.eventRepository
       .createQueryBuilder("event")
+      .leftJoinAndSelect("event.preview","preview")
+      .leftJoinAndSelect("event.category","category")
       .where("event.name ilike :query", { query: `%${query}%` })
       .andWhere("event.categoryId IN (:...categories)", { categories })
       .getMany();
